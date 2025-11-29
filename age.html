@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vercel Age Tracker</title>
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font family -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000; /* Deep black background */
+        }
+        /* Custom gradient for the header text, similar to Vercel's aesthetic */
+        .vercel-gradient {
+            background-image: linear-gradient(90deg, #fff 40%, #888 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Style for the real-time number display */
+        .digit {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main Card Container -->
+    <main class="w-full max-w-4xl bg-gray-900 border border-gray-800 rounded-xl shadow-2xl p-6 md:p-10 transition-all duration-300">
+        
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-5xl font-extrabold vercel-gradient mb-3">
+                OJCYS AGE IS
+            </h1>
+            <p class="text-gray-400 text-lg">
+                specifically born in
+                <span class="font-mono text-white bg-gray-800 px-2 py-1 rounded-md text-sm md:text-base">
+                    June 6, 2011, 8:03 AM
+                </span>
+            </p>
+        </header>
+
+        <!-- Age Display Grid -->
+        <div id="age-display" class="grid grid-cols-2 md:grid-cols-3 gap-6">
+            
+            <!-- Years -->
+            <div class="bg-gray-800/70 p-4 rounded-lg flex flex-col items-center justify-center border-t-4 border-cyan-500 hover:bg-gray-700/70 transition duration-300">
+                <span id="years" class="text-4xl md:text-6xl font-extrabold text-cyan-400 digit">0</span>
+                <span class="text-gray-300 text-base md:text-lg mt-1">Years</span>
+            </div>
+
+            <!-- Days -->
+            <div class="bg-gray-800/70 p-4 rounded-lg flex flex-col items-center justify-center border-t-4 border-purple-500 hover:bg-gray-700/70 transition duration-300">
+                <span id="days" class="text-4xl md:text-6xl font-extrabold text-purple-400 digit">0</span>
+                <span class="text-gray-300 text-base md:text-lg mt-1">Days</span>
+            </div>
+
+            <!-- Hours -->
+            <div class="bg-gray-800/70 p-4 rounded-lg flex flex-col items-center justify-center border-t-4 border-green-500 hover:bg-gray-700/70 transition duration-300">
+                <span id="hours" class="text-4xl md:text-6xl font-extrabold text-green-400 digit">0</span>
+                <span class="text-gray-300 text-base md:text-lg mt-1">Hours</span>
+            </div>
+
+            <!-- Minutes -->
+            <div class="bg-gray-800/70 p-4 rounded-lg flex flex-col items-center justify-center border-t-4 border-yellow-500 hover:bg-gray-700/70 transition duration-300">
+                <span id="minutes" class="text-4xl md:text-6xl font-extrabold text-yellow-400 digit">0</span>
+                <span class="text-gray-300 text-base md:text-lg mt-1">Minutes</span>
+            </div>
+
+            <!-- Seconds (The continuous counter) -->
+            <div class="col-span-2 md:col-span-1 bg-gray-800/70 p-4 rounded-lg flex flex-col items-center justify-center border-t-4 border-red-500 hover:bg-gray-700/70 transition duration-300">
+                <span id="seconds" class="text-4xl md:text-6xl font-extrabold text-red-400 digit">0</span>
+                <span class="text-gray-300 text-base md:text-lg mt-1">Seconds</span>
+            </div>
+
+            <!-- The Milliseconds section was removed from here -->
+
+        </div>
+
+        <footer class="mt-10 text-center text-gray-600 text-sm">
+            Powered by my daddys balls
+        </footer>
+
+    </main>
+
+    <script>
+        // Define the specific birth moment: June 6, 2011, 8:03 AM
+        const BIRTH_DATE_STRING = '2011-06-06T08:03:00';
+        const birthDate = new Date(BIRTH_DATE_STRING);
+        const birthTime = birthDate.getTime();
+
+        // Get references to the display elements
+        const yearsEl = document.getElementById('years');
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        // Milliseconds element reference removed
+
+        /**
+         * Calculates and updates the age in years, days, hours, minutes, and seconds.
+         */
+        function updateAge() {
+            const now = Date.now();
+            const diffMs = now - birthTime;
+
+            if (diffMs < 0) {
+                // If birth date is in the future
+                yearsEl.textContent = '0';
+                daysEl.textContent = '0';
+                hoursEl.textContent = '0';
+                minutesEl.textContent = '0';
+                secondsEl.textContent = '0';
+                return;
+            }
+
+            // --- CONSTANTS ---
+            const MS_PER_SECOND = 1000;
+            const MS_PER_MINUTE = MS_PER_SECOND * 60;
+            const MS_PER_HOUR = MS_PER_MINUTE * 60;
+            const MS_PER_DAY = MS_PER_HOUR * 24;
+            // Average days per year (365.2425 days/year)
+            const MS_PER_YEAR = MS_PER_DAY * 365.2425; 
+
+            // --- CALCULATIONS ---
+
+            // Total Milliseconds calculation removed
+
+            // 1. Years (Most accurate for elapsed time)
+            const years = Math.floor(diffMs / MS_PER_YEAR);
+            yearsEl.textContent = years.toLocaleString('en-US');
+
+            // 2. Days (Simplified total days since birth)
+            const totalDaysSinceBirth = Math.floor(diffMs / MS_PER_DAY);
+            daysEl.textContent = totalDaysSinceBirth.toLocaleString('en-US');
+
+            // 3. Calculate Hours, Minutes, Seconds (The remainder of the current day)
+            let msOfToday = diffMs % MS_PER_DAY;
+
+            const hours = Math.floor(msOfToday / MS_PER_HOUR);
+            msOfToday %= MS_PER_HOUR;
+            
+            const minutes = Math.floor(msOfToday / MS_PER_MINUTE);
+            msOfToday %= MS_PER_MINUTE;
+            
+            const seconds = Math.floor(msOfToday / MS_PER_SECOND);
+
+            hoursEl.textContent = hours.toLocaleString('en-US');
+            minutesEl.textContent = minutes.toLocaleString('en-US');
+            secondsEl.textContent = seconds.toLocaleString('en-US');
+        }
+
+        // Run the function immediately and then every second
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAge();
+            setInterval(updateAge, 1000);
+        });
+
+    </script>
+</body>
+</html>
